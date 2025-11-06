@@ -4,7 +4,8 @@
   "description": "```bash\r npm init -y\r ```",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/main.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "test": "vitest src/server.test.ts"
   },
   "keywords": [],
   "author": "",
