@@ -21,6 +21,29 @@ describe("API Cities", () => {
         });
     });
 
+    describe("GET /cities/:zipcode", () => {
+        it("retourne une ville existante", async () => {
+            const response = await request(server).get("/cities/70140");
+            expect(response.status).toBe(200);
+            expect(response.body.city).toEqual({
+                zipCode: 70140,
+                name: "Valay"
+            });
+        });
+
+        it("retourne 404 pour une ville inexistante", async () => {
+            const response = await request(server).get("/cities/70544");
+            expect(response.status).toBe(404);
+            expect(response.body.error).toBe("Ville non trouvée");
+        });
+
+        it("retourne 400 pour un code postale invalide", async () => {
+            const response = await request(server).get("/cities/abc");
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("ZipCode invalide");
+        });
+    });
+
     describe("Routes générales", () => {
         it("retourne 404 pour une route inexistante", async () => {
             const response = await request(server).get("/route-inexistante");

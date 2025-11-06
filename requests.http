@@ -5,3 +5,15 @@ GET http://localhost:3000/
 GET http://localhost:3000/cities
 
 ###
+
+GET http://localhost:3000/cities/70140
+
+###
+
+GET http://localhost:3000/cities/78787
+
+###
+
+GET http://localhost:3000/cities/abc
+
+###
