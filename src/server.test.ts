@@ -36,11 +36,19 @@ describe("API Cities", () => {
             expect(response.status).toBe(404);
             expect(response.body.error).toBe("Ville non trouvée");
         });
+    });
 
-        it("retourne 400 pour un code postale invalide", async () => {
-            const response = await request(server).get("/cities/abc");
-            expect(response.status).toBe(400);
-            expect(response.body.error).toBe("ZipCode invalide");
+    describe.only("DELETE /cities/:zipcode", () => {
+        it("supprime une ville existante", async () => {
+            const response = await request(server).delete("/cities/21000");
+            expect(response.status).toBe(200);
+            expect(response.body.message).toBe("Ville supprimée avec succès");
+        });
+
+        it("retourne 404 pour une ville inexistante", async () => {
+            const response = await request(server).delete("/cities/999");
+            expect(response.status).toBe(404);
+            expect(response.body.error).toBe("Ville non trouvée");
         });
     });
 

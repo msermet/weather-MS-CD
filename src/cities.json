@@ -1,18 +1,14 @@
 [
   {
-    "zipCode": 70140,
-    "name": "Valay"
-  },
-  {
-    "zipCode": 25610,
+    "zipCode": "25610",
     "name": "Arc-Et-Senans"
   },
   {
-    "zipCode": 21000,
-    "name": "Dijon"
+    "zipCode": "25000",
+    "name": "Besac"
   },
   {
-    "zipCode": 25000,
-    "name": "Besançon"
+    "zipCode": "70140",
+    "name": "Valay"
   }
 ]

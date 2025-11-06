@@ -1,4 +1,4 @@
-import {getAllCities, getCityByZipCode} from "./cityService";
+import {deleteCity, getAllCities, getCityByZipCode} from "./cityService";
 import {logger} from "./logger";
 
 const express = require('express')
@@ -17,11 +17,7 @@ app.get('/cities', (request, response) => {
 
 app.get('/cities/:zipcode', (request, response) => {
     logger.info({ method: request.method, url: request.url, params: request.params }, 'Route appelée: GET /cities/:zipcode');
-    const zipCode = Number(request.params.zipcode);
-    if (isNaN(zipCode)) {
-        logger.error({ zipCode: request.params.zipcode }, 'Erreur: ZipCode invalide');
-        return response.status(400).json({error: "ZipCode invalide"});
-    }
+    const zipCode = String(request.params.zipcode);
     const city = getCityByZipCode(zipCode);
     if (!city) {
         logger.error({ zipCode }, 'Erreur: Ville non trouvée');
@@ -29,6 +25,21 @@ app.get('/cities/:zipcode', (request, response) => {
     }
     response.json({city})
 })
+
+app.delete("/cities/:zipcode", (request, response) => {
+    logger.info({ method: request.method, url: request.url, params: request.params }, 'Route appelée: DELETE /cities/:zipcode');
+    const zipCode = String(request.params.zipcode);
+
+    const deleted = deleteCity(zipCode);
+    if (!deleted) {
+        logger.error({ zipCode }, 'Erreur: Ville non trouvée pour suppression');
+        return response.status(404).json({ error: "Ville non trouvée" });
+    }
+
+    logger.info({ zipCode }, 'Ville supprimée avec succès');
+    response.json({ message: "Ville supprimée avec succès" });
+});
+
 
 app.use((request, response) => {
     response.status(404).json({ error: "Route non trouvée" });
