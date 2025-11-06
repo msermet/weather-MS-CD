@@ -1,4 +1,4 @@
-import {deleteCity, getAllCities, getCityByZipCode} from "./cityService";
+import {deleteCity, getAllCities, getCityByZipCode, createCity} from "./cityService";
 import {logger} from "./logger";
 
 const express = require('express')
@@ -39,6 +39,21 @@ app.delete("/cities/:zipcode", (request, response) => {
     logger.info({ zipCode }, 'Ville supprimée avec succès');
     response.json({ message: "Ville supprimée avec succès" });
 });
+
+app.post('/cities', (request, response) => {
+    logger.info({ method: request.method, url: request.url, body: request.body }, 'Route appelée: POST /cities');
+    const {zipCode,name} = request.body;
+    if (!zipCode || !name) {
+        logger.error({ body: request.body }, 'Erreur: Champs zipCode ou name manquants');
+        return response.status(400).json({error: "Les champs 'zipCode' et 'name' sont requis"});
+    }
+
+
+
+    const newCity = createCity(zipCode,name);
+    logger.info({ city: newCity }, 'Ville créée avec succès');
+    response.status(201).json({city: newCity});
+})
 
 
 app.use((request, response) => {

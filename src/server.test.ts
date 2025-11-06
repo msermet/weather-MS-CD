@@ -4,6 +4,16 @@ import { server } from "./server";
 import { cities } from "./cityService";
 
 describe("API Cities", () => {
+    const initialCities = [
+        { zipCode: "70140", name: "Valay" },
+        { zipCode: "25610", name: "Arc-Et-Senans" },
+        { zipCode: "21000", name: "Dijon" },
+        { zipCode: "25000", name: "Besançon" }
+    ];
+    beforeEach(() => {
+        cities.length = 0;
+        cities.push(...initialCities);
+    });
 
     describe("GET /", () => {
         it("retourne Évaluation Météo : Maxime et Clément", async () => {

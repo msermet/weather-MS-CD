@@ -17,3 +17,19 @@ GET http://localhost:3000/cities/78787
 GET http://localhost:3000/cities/abc
 
 ###
+
+DELETE http://localhost:3000/cities/25000
+
+###
+
+DELETE http://localhost:3000/cities/abc
+
+###
+
+POST http://localhost:3000/cities
+Content-Type: application/json
+
+{
+  "zipCode": "21010",
+  "name": "Valat"
+}
