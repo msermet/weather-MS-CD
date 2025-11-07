@@ -1,4 +1,4 @@
-import citiesData from "./cities.json";
+import citiesData from "../data/cities.json";
 import fs from 'fs';
 import path from 'path';
 

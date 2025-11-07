@@ -1,4 +1,4 @@
-import {deleteCity, getAllCities, getCityByZipCode, createCity} from "./cityService";
+import {deleteCity, getAllCities, getCityByZipCode, createCity} from "./services/cityService";
 import {logger} from "./logger";
 
 const express = require('express')

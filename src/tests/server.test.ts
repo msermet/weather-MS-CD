@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import request from "supertest";
-import { server } from "./server";
-import { cities } from "./cityService";
+import { server } from "../server";
+import { cities } from "../services/cityService";
 
 describe("API Cities", () => {
     const initialCities = [
