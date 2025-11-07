@@ -1,4 +1,5 @@
 import {deleteCity, getAllCities, getCityByZipCode, createCity, updateCity} from "./services/cityService";
+import {getWeatherByZipCode} from "./services/weatherService";
 import {logger} from "./logger";
 
 const express = require('express')
@@ -77,6 +78,30 @@ app.put('/cities/:zipcode', (request, response) => {
     logger.info({ city: updatedCity }, 'Ville mise à jour avec succès');
     response.json({ zipCode: updatedCity.zipCode, name: updatedCity.name });
 });
+
+app.get('/cities/:zipcode/weather', (request, response) => {
+    logger.info({ method: request.method, url: request.url, params: request.params }, 'Route appelée: GET /cities/:zipcode/weather');
+    const zipCode = String(request.params.zipcode);
+
+    const city = getCityByZipCode(zipCode);
+    if (!city) {
+        logger.error({ zipCode }, 'Erreur: Ville non trouvée');
+        return response.status(404).json({error: "Ville non trouvée"});
+    }
+
+    const weather = getWeatherByZipCode(zipCode);
+    if (!weather) {
+        logger.error({ zipCode }, 'Erreur: Données météo non disponibles pour cette ville');
+        return response.status(404).json({error: "Données météo non disponibles pour cette ville"});
+    }
+
+    logger.info({ zipCode, weather: weather.weather }, 'Météo récupérée avec succès');
+    response.json({
+        zipCode: city.zipCode,
+        name: city.name,
+        weather: weather.weather
+    });
+})
 
 app.use((request, response) => {
     response.status(404).json({ error: "Route non trouvée" });

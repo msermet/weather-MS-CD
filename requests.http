@@ -45,9 +45,11 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/cities/99999
-Content-Type: application/json
+GET http://localhost:3000/cities/70140/weather
 
-{
-"name": "Ville Inexistante"
-}
+
+###
+
+GET http://localhost:3000/cities/99999/weather
+
+###

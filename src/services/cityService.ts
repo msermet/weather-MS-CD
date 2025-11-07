@@ -10,7 +10,7 @@ function saveContacts(): void {
     if (process.env.NODE_ENV === 'test' || process.env.VITEST === 'true') {
         return;
     }
-    const filePath = path.join(__dirname, "cities.json");
+    const filePath = path.join(__dirname, "../data/cities.json");
     fs.writeFileSync(filePath, JSON.stringify(cities, null, 2), "utf-8");
 }
 

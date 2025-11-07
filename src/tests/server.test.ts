@@ -106,7 +106,7 @@ describe("API Cities", () => {
         });
     });
 
-    describe.only("PUT /cities/:zipcode", () => {
+    describe("PUT /cities/:zipcode", () => {
         it("met à jour une ville existante", async () => {
             const response = await request(server)
                 .put("/cities/70140")
@@ -135,6 +135,24 @@ describe("API Cities", () => {
 
             expect(response.status).toBe(400);
             expect(response.body.error).toBe("Le champ 'name' est requis");
+        });
+    });
+
+    describe.only("GET /cities/:zipcode/weather", () => {
+        it("retourne la météo d'une ville existante", async () => {
+            const response = await request(server).get("/cities/70140/weather");
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                zipCode: "70140",
+                name: "Valay",
+                weather: "pluie"
+            });
+        });
+
+        it("retourne 404 pour une ville inexistante", async () => {
+            const response = await request(server).get("/cities/99999/weather");
+            expect(response.status).toBe(404);
+            expect(response.body.error).toBe("Ville non trouvée");
         });
     });
 

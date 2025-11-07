@@ -1,26 +1,14 @@
 [
   {
     "zipCode": "70140",
-    "name": "Valay"
+    "name": "Nouveau Valay"
   },
   {
     "zipCode": "25610",
     "name": "Arc-Et-Senans"
   },
   {
-    "zipCode": "22111810",
-    "name": "dteds"
-  },
-  {
-    "zipCode": "22111810",
-    "name": "dteds"
-  },
-  {
-    "zipCode": "22111810",
-    "name": "dteds"
-  },
-  {
-    "zipCode": "21010",
-    "name": "Valat"
+    "zipCode": "70140",
+    "name": "Valay"
   }
 ]
