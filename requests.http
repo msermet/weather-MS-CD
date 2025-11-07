@@ -53,3 +53,27 @@ GET http://localhost:3000/cities/70140/weather
 GET http://localhost:3000/cities/99999/weather
 
 ###
+
+POST http://localhost:3000/cities/70140/weather
+Content-Type: application/json
+
+{
+  "weather": "neige"
+}
+###
+
+POST http://localhost:3000/cities/25610/weather
+Content-Type: application/json
+
+{
+"weather": "beau"
+}
+
+###
+
+POST http://localhost:3000/cities/99999/weather
+Content-Type: application/json
+
+{
+"weather": "pluie"
+}

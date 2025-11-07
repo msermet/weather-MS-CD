@@ -23,3 +23,15 @@ function saveWeather(): void {
 export function getWeatherByZipCode(zipCode: string): Weather | undefined {
     return weatherList.find(w => w.zipCode === zipCode);
 }
+
+export function createWeather(zipCode: string, weather: WeatherType): Weather {
+    const maxId = weatherList.length > 0 ? Math.max(...weatherList.map(w => w.id)) : 0;
+    const newWeather: Weather = {
+        id: maxId + 1,
+        zipCode: zipCode,
+        weather: weather
+    };
+    weatherList.push(newWeather);
+    saveWeather();
+    return newWeather;
+}

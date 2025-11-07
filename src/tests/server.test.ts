@@ -138,7 +138,7 @@ describe("API Cities", () => {
         });
     });
 
-    describe.only("GET /cities/:zipcode/weather", () => {
+    describe("GET /cities/:zipcode/weather", () => {
         it("retourne la météo d'une ville existante", async () => {
             const response = await request(server).get("/cities/70140/weather");
             expect(response.status).toBe(200);
@@ -153,6 +153,37 @@ describe("API Cities", () => {
             const response = await request(server).get("/cities/99999/weather");
             expect(response.status).toBe(404);
             expect(response.body.error).toBe("Ville non trouvée");
+        });
+    });
+
+    describe.only("POST /cities/:zipcode/weather", () => {
+        it("crée un bulletin météo pour une ville existante", async () => {
+            const response = await request(server).post("/cities/70140/weather").send({ weather: "neige" });
+
+            expect(response.status).toBe(201);
+            expect(response.body.id).toBeDefined();
+            expect(typeof response.body.id).toBe("number");
+        });
+
+        it("retourne 404 pour une ville inexistante", async () => {
+            const response = await request(server).post("/cities/99999/weather").send({ weather: "pluie" });
+
+            expect(response.status).toBe(404);
+            expect(response.body.error).toBe("Ville non trouvée");
+        });
+
+        it("retourne 400 si le champ weather est manquant", async () => {
+            const response = await request(server).post("/cities/70140/weather").send({});
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("Le champ 'weather' est requis");
+        });
+
+        it("retourne 400 si la valeur de weather est invalide", async () => {
+            const response = await request(server).post("/cities/70140/weather").send({ weather: "orage" });
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("Le champ 'weather' doit être 'pluie', 'beau' ou 'neige'");
         });
     });
 

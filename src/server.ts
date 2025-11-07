@@ -1,5 +1,5 @@
 import {deleteCity, getAllCities, getCityByZipCode, createCity, updateCity} from "./services/cityService";
-import {getWeatherByZipCode} from "./services/weatherService";
+import {getWeatherByZipCode,createWeather} from "./services/weatherService";
 import {logger} from "./logger";
 
 const express = require('express')
@@ -101,6 +101,32 @@ app.get('/cities/:zipcode/weather', (request, response) => {
         name: city.name,
         weather: weather.weather
     });
+})
+
+app.post('/cities/:zipcode/weather', (request, response) => {
+    logger.info({ method: request.method, url: request.url, params: request.params, body: request.body }, 'Route appelée: POST /cities/:zipcode/weather');
+    const zipCode = String(request.params.zipcode);
+    const { weather } = request.body;
+
+    const city = getCityByZipCode(zipCode);
+    if (!city) {
+        logger.error({ zipCode }, 'Erreur: Ville non trouvée');
+        return response.status(404).json({ error: "Ville non trouvée" });
+    }
+
+    if (!weather) {
+        logger.error({ body: request.body }, 'Erreur: Champ weather manquant');
+        return response.status(400).json({ error: "Le champ 'weather' est requis" });
+    }
+
+    if (weather !== "pluie" && weather !== "beau" && weather !== "neige") {
+        logger.error({ weather }, 'Erreur: Valeur de weather invalide');
+        return response.status(400).json({ error: "Le champ 'weather' doit être 'pluie', 'beau' ou 'neige'" });
+    }
+
+    const newWeather = createWeather(zipCode, weather);
+    logger.info({ weather: newWeather }, 'Bulletin météo créé avec succès');
+    response.status(201).json({ id: newWeather.id });
 })
 
 app.use((request, response) => {
