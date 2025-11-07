@@ -48,7 +48,51 @@ describe("API Cities", () => {
         });
     });
 
-    describe.only("DELETE /cities/:zipcode", () => {
+    describe.only("POST /cities", () => {
+        it("crée une nouvelle ville", async () => {
+            const response = await request(server).post("/cities").send({zipCode: "75000", name: "Paris"});
+
+            expect(response.status).toBe(201);
+            expect(response.body.city).toMatchObject({
+                zipCode: "75000",
+                name: "Paris"
+            });
+        });
+
+        it("retourne 400 si le zipCode est manquant", async () => {
+            const response = await request(server).post("/cities").send({name: "Lyon"});
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("Les champs 'zipCode' et 'name' sont requis");
+        });
+
+        it("retourne 400 si le name est manquant", async () => {
+            const response = await request(server).post("/cities").send({zipCode: "69000"});
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("Les champs 'zipCode' et 'name' sont requis");
+        });
+
+        it("autorise plusieurs villes avec le même code postal", async () => {
+            const response = await request(server).post("/cities").send({ zipCode: "70140", name: "Chaumercenne" });
+
+            expect(response.status).toBe(201);
+            expect(response.body.city).toMatchObject({
+                zipCode: "70140",
+                name: "Chaumercenne"
+            });
+        });
+
+        it("retourne 409 si le code postal existe déjà pour cette ville", async () => {
+            const response = await request(server).post("/cities").send({zipCode: "70140", name: "Valay"});
+
+            expect(response.status).toBe(409);
+            expect(response.body.error).toBe("La ville est déjà associée à ce code postale");
+        });
+    });
+
+
+    describe("DELETE /cities/:zipcode", () => {
         it("supprime une ville existante", async () => {
             const response = await request(server).delete("/cities/21000");
             expect(response.status).toBe(200);

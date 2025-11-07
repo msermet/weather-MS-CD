@@ -30,6 +30,6 @@ POST http://localhost:3000/cities
 Content-Type: application/json
 
 {
-  "zipCode": "21010",
-  "name": "Valat"
+  "zipCode": "70140",
+  "name": "Valay"
 }

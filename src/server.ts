@@ -48,13 +48,15 @@ app.post('/cities', (request, response) => {
         return response.status(400).json({error: "Les champs 'zipCode' et 'name' sont requis"});
     }
 
-
-
     const newCity = createCity(zipCode,name);
+    if (!newCity) {
+        logger.error({ zipCode,name }, 'Erreur: La ville est déjà associée à ce code postale');
+        return response.status(409).json({error: "La ville est déjà associée à ce code postale"});
+    }
+
     logger.info({ city: newCity }, 'Ville créée avec succès');
     response.status(201).json({city: newCity});
 })
-
 
 app.use((request, response) => {
     response.status(404).json({ error: "Route non trouvée" });

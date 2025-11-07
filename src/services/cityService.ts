@@ -32,7 +32,12 @@ export function deleteCity(zipCode: string): boolean {
     return true;
 }
 
-export function createCity(zipCode: string, name: string): City {
+export function createCity(zipCode: string, name: string): City | null {
+    const existingCity = cities.find(c => c.zipCode === zipCode && c.name === name);
+    if (existingCity) {
+        return null;
+    }
+
     const newCity: City = { zipCode: zipCode, name : name };
     cities.push(newCity);
     saveContacts()
