@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import request from "supertest";
 import { server } from "../server";
 import { cities } from "../services/cityService";
+import {weatherList} from "../services/weatherService";
 
 describe("API Cities", () => {
     const initialCities = [
@@ -10,9 +11,18 @@ describe("API Cities", () => {
         { zipCode: "21000", name: "Dijon" },
         { zipCode: "25000", name: "Besançon" }
     ];
+
+    const initialWeather = [
+        { id: 1, zipCode: "70140", weather: "pluie" as const },
+        { id: 2, zipCode: "25610", weather: "beau" as const },
+        { id: 3, zipCode: "25000", weather: "beau" as const }
+    ];
+
     beforeEach(() => {
         cities.length = 0;
-        cities.push(...initialCities);
+        cities.push(...initialCities.map(c => ({ ...c })));
+        weatherList.length = 0;
+        weatherList.push(...initialWeather.map(w => ({ ...w })));
     });
 
     describe("GET /", () => {
@@ -36,7 +46,7 @@ describe("API Cities", () => {
             const response = await request(server).get("/cities/70140");
             expect(response.status).toBe(200);
             expect(response.body.city).toEqual({
-                zipCode: 70140,
+                zipCode: "70140",
                 name: "Valay"
             });
         });
@@ -187,7 +197,7 @@ describe("API Cities", () => {
         });
     });
 
-    describe.only("DELETE /weather/:id", () => {
+    describe("DELETE /weather/:id", () => {
         it("supprime un bulletin météo existant", async () => {
             const createResponse = await request(server)
                 .post("/cities/70140/weather")
