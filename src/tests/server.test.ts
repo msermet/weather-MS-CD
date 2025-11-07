@@ -156,7 +156,7 @@ describe("API Cities", () => {
         });
     });
 
-    describe.only("POST /cities/:zipcode/weather", () => {
+    describe("POST /cities/:zipcode/weather", () => {
         it("crée un bulletin météo pour une ville existante", async () => {
             const response = await request(server).post("/cities/70140/weather").send({ weather: "neige" });
 
@@ -184,6 +184,32 @@ describe("API Cities", () => {
 
             expect(response.status).toBe(400);
             expect(response.body.error).toBe("Le champ 'weather' doit être 'pluie', 'beau' ou 'neige'");
+        });
+    });
+
+    describe.only("DELETE /weather/:id", () => {
+        it("supprime un bulletin météo existant", async () => {
+            const createResponse = await request(server)
+                .post("/cities/70140/weather")
+                .send({ weather: "neige" });
+
+            const weatherId = createResponse.body.id;
+
+            const deleteResponse = await request(server).delete(`/weather/${weatherId}`);
+            expect(deleteResponse.status).toBe(200);
+            expect(deleteResponse.body).toEqual({});
+        });
+
+        it("retourne 404 pour un bulletin météo inexistant", async () => {
+            const response = await request(server).delete("/weather/99999");
+            expect(response.status).toBe(404);
+            expect(response.body.error).toBe("Bulletin météo non trouvé");
+        });
+
+        it("retourne 400 pour un ID invalide", async () => {
+            const response = await request(server).delete("/weather/abc");
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("ID invalide");
         });
     });
 

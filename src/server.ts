@@ -1,5 +1,5 @@
 import {deleteCity, getAllCities, getCityByZipCode, createCity, updateCity} from "./services/cityService";
-import {getWeatherByZipCode,createWeather} from "./services/weatherService";
+import {getWeatherByZipCode,createWeather,deleteWeather} from "./services/weatherService";
 import {logger} from "./logger";
 
 const express = require('express')
@@ -128,6 +128,25 @@ app.post('/cities/:zipcode/weather', (request, response) => {
     logger.info({ weather: newWeather }, 'Bulletin météo créé avec succès');
     response.status(201).json({ id: newWeather.id });
 })
+
+app.delete("/weather/:id", (request, response) => {
+    logger.info({ method: request.method, url: request.url, params: request.params }, 'Route appelée: DELETE /weather/:id');
+    const id = parseInt(request.params.id, 10);
+
+    if (isNaN(id)) {
+        logger.error({ id: request.params.id }, 'Erreur: ID invalide');
+        return response.status(400).json({ error: "ID invalide" });
+    }
+
+    const deleted = deleteWeather(id);
+    if (!deleted) {
+        logger.error({ id }, 'Erreur: Bulletin météo non trouvé');
+        return response.status(404).json({ error: "Bulletin météo non trouvé" });
+    }
+
+    logger.info({ id }, 'Bulletin météo supprimé avec succès');
+    response.json({});
+});
 
 app.use((request, response) => {
     response.status(404).json({ error: "Route non trouvée" });

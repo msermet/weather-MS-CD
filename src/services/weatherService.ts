@@ -35,3 +35,13 @@ export function createWeather(zipCode: string, weather: WeatherType): Weather {
     saveWeather();
     return newWeather;
 }
+
+export function deleteWeather(id: number): boolean {
+    const index = weatherList.findIndex(w => w.id === id);
+    if (index === -1) {
+        return false;
+    }
+    weatherList.splice(index, 1);
+    saveWeather();
+    return true;
+}
