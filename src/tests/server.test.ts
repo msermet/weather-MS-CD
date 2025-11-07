@@ -48,7 +48,7 @@ describe("API Cities", () => {
         });
     });
 
-    describe.only("POST /cities", () => {
+    describe("POST /cities", () => {
         it("crée une nouvelle ville", async () => {
             const response = await request(server).post("/cities").send({zipCode: "75000", name: "Paris"});
 
@@ -103,6 +103,38 @@ describe("API Cities", () => {
             const response = await request(server).delete("/cities/999");
             expect(response.status).toBe(404);
             expect(response.body.error).toBe("Ville non trouvée");
+        });
+    });
+
+    describe.only("PUT /cities/:zipcode", () => {
+        it("met à jour une ville existante", async () => {
+            const response = await request(server)
+                .put("/cities/70140")
+                .send({ name: "Nouveau Valay" });
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                zipCode: "70140",
+                name: "Nouveau Valay"
+            });
+        });
+
+        it("retourne 404 pour une ville inexistante", async () => {
+            const response = await request(server)
+                .put("/cities/99999")
+                .send({ name: "Test" });
+
+            expect(response.status).toBe(404);
+            expect(response.body.error).toBe("Ville non trouvée");
+        });
+
+        it("retourne 400 si le name est manquant", async () => {
+            const response = await request(server)
+                .put("/cities/70140")
+                .send({});
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe("Le champ 'name' est requis");
         });
     });
 

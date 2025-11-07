@@ -1,4 +1,4 @@
-import {deleteCity, getAllCities, getCityByZipCode, createCity} from "./services/cityService";
+import {deleteCity, getAllCities, getCityByZipCode, createCity, updateCity} from "./services/cityService";
 import {logger} from "./logger";
 
 const express = require('express')
@@ -57,6 +57,26 @@ app.post('/cities', (request, response) => {
     logger.info({ city: newCity }, 'Ville créée avec succès');
     response.status(201).json({city: newCity});
 })
+
+app.put('/cities/:zipcode', (request, response) => {
+    logger.info({ method: request.method, url: request.url, params: request.params, body: request.body }, 'Route appelée: PUT /cities/:zipcode');
+    const zipCode = String(request.params.zipcode);
+    const { name } = request.body;
+
+    if (!name) {
+        logger.error({ body: request.body }, 'Erreur: Champ name manquant');
+        return response.status(400).json({ error: "Le champ 'name' est requis" });
+    }
+
+    const updatedCity = updateCity(zipCode, name);
+    if (!updatedCity) {
+        logger.error({ zipCode }, 'Erreur: Ville non trouvée pour mise à jour');
+        return response.status(404).json({ error: "Ville non trouvée" });
+    }
+
+    logger.info({ city: updatedCity }, 'Ville mise à jour avec succès');
+    response.json({ zipCode: updatedCity.zipCode, name: updatedCity.name });
+});
 
 app.use((request, response) => {
     response.status(404).json({ error: "Route non trouvée" });

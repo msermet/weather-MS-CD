@@ -33,3 +33,21 @@ Content-Type: application/json
   "zipCode": "70140",
   "name": "Valay"
 }
+
+###
+
+PUT http://localhost:3000/cities/70140
+Content-Type: application/json
+
+{
+"name": "Nouveau Valay"
+}
+
+###
+
+PUT http://localhost:3000/cities/99999
+Content-Type: application/json
+
+{
+"name": "Ville Inexistante"
+}

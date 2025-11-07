@@ -43,3 +43,14 @@ export function createCity(zipCode: string, name: string): City | null {
     saveContacts()
     return newCity;
 }
+
+export function updateCity(zipCode: string, name: string): City | null {
+    const city = cities.find(c => c.zipCode === zipCode);
+    if (!city) {
+        return null;
+    }
+
+    city.name = name;
+    saveContacts();
+    return city;
+}
